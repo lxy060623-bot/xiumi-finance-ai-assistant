@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>秀米金融资讯助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部标题 -->
+    <header class="header">
+      <div class="logo">📊</div>
+      <div class="title-group">
+        <h1>秀米金融资讯助手</h1>
+        <p class="subtitle">Chrome / Edge · Claude / 自定义模型</p>
+      </div>
+    </header>
+
+    <!-- Tab 导航 -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="content">📝 内容</button>
+      <button class="tab" data-tab="style">🎨 排版</button>
+      <button class="tab" data-tab="image">🖼️ 配图</button>
+      <button class="tab" data-tab="settings">⚙️ 设置</button>
+    </nav>
+
+    <!-- 内容 Tab -->
+    <section class="tab-panel active" id="tab-content">
+      <div class="form-group">
+        <label>资讯时间段</label>
+        <div class="row">
+          <input type="text" id="period" placeholder="例如：八月上旬" value="八月上旬">
+          <button id="btn-generate" class="btn btn-primary">✨ 生成内容</button>
+        </div>
+        <p class="hint">支持 Claude 原生接口与 OpenAI 兼容接口；未配置时使用模板</p>
+      </div>
+
+      <div class="form-group">
+        <label>参考素材或来源链接（可选）</label>
+        <textarea id="source-notes" rows="4" placeholder="每行一条来源、链接或已核实事实。模型会优先使用这些素材。"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>文章标题</label>
+        <input type="text" id="article-title" placeholder="自动填充，可修改">
+      </div>
+
+      <div class="form-group">
+        <label>正文内容（支持手动编辑）</label>
+        <textarea id="article-content" rows="12" placeholder="点击「生成内容」或在此粘贴文章..."></textarea>
+      </div>
+
+      <div class="action-bar">
+        <button id="btn-copy" class="btn btn-secondary">📋 复制富文本</button>
+        <button id="btn-fill" class="btn btn-primary btn-large">🚀 填充到秀米</button>
+      </div>
+      <div id="status" class="status"></div>
+    </section>
+
+    <!-- 排版 Tab -->
+    <section class="tab-panel" id="tab-style">
+      <div class="form-group">
+        <label>正文字号</label>
+        <div class="row">
+          <input type="number" id="font-size" value="15" min="12" max="20"> px
+        </div>
+      </div>
+      <div class="form-group">
+        <label>行间距</label>
+        <div class="row">
+          <input type="number" id="line-height" value="1.75" min="1" max="3" step="0.05"> 倍
+        </div>
+      </div>
+      <div class="form-group">
+        <label>字间距</label>
+        <div class="row">
+          <input type="number" id="letter-spacing" value="1" min="0" max="5" step="0.5"> px
+        </div>
+      </div>
+      <div class="form-group">
+        <label>首行缩进</label>
+        <div class="row">
+          <label class="switch">
+            <input type="checkbox" id="text-indent" checked>
+            <span class="slider"></span>
+          </label>
+          <span class="switch-label">开启（2字符）</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>标题主色</label>
+        <div class="row">
+          <input type="color" id="title-color" value="#1a5490">
+          <input type="text" id="title-color-text" value="#1a5490">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>正文颜色</label>
+        <div class="row">
+          <input type="color" id="text-color" value="#333333">
+          <input type="text" id="text-color-text" value="#333333">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>强调色（关键数据）</label>
+        <div class="row">
+          <input type="color" id="accent-color" value="#c0392b">
+          <input type="text" id="accent-color-text" value="#c0392b">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Part 分区样式</label>
+        <select id="part-style">
+          <option value="numbered">编号标题（Part.01）</option>
+          <option value="colored">色块标题</option>
+          <option value="underline">下划线标题</option>
+          <option value="simple">纯文字加粗</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- 配图 Tab -->
+    <section class="tab-panel" id="tab-image">
+      <div class="form-group">
+        <label>自动插入配图</label>
+        <div class="row">
+          <label class="switch">
+            <input type="checkbox" id="auto-image" checked>
+            <span class="slider"></span>
+          </label>
+          <span class="switch-label">开启</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>配图来源</label>
+        <select id="image-source">
+          <option value="bing">必应图片搜索</option>
+          <option value="custom">自定义URL列表</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>封面图关键词</label>
+        <input type="text" id="cover-keyword" value="金融 城市 财经 插画">
+      </div>
+      <div class="form-group">
+        <label>国内金融配图关键词</label>
+        <input type="text" id="domestic-keyword" value="央行 货币政策 人民币">
+      </div>
+      <div class="form-group">
+        <label>流动性配图关键词</label>
+        <input type="text" id="liquidity-keyword" value="流动性 利率 曲线 数据">
+      </div>
+      <div class="form-group">
+        <label>国际金融配图关键词</label>
+        <input type="text" id="international-keyword" value="全球金融 美联储 油价 地球">
+      </div>
+      <div class="form-group">
+        <label>自定义图片URL（每行一个，按封面/Part顺序）</label>
+        <textarea id="custom-urls" rows="4" placeholder="https://example.com/img1.jpg&#10;https://example.com/img2.jpg"></textarea>
+      </div>
+      <button id="btn-preview-images" class="btn btn-secondary">🔍 预览配图</button>
+      <div id="image-preview" class="image-preview"></div>
+    </section>
+
+    <!-- 设置 Tab -->
+    <section class="tab-panel" id="tab-settings">
+      <div class="form-group">
+        <label>模型接口类型</label>
+        <select id="provider">
+          <option value="openai-compatible">OpenAI 兼容接口（OpenAI、第三方中转、本地模型等）</option>
+          <option value="anthropic">Claude 原生 Messages API</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>大模型 API 地址</label>
+        <input type="text" id="api-url" placeholder="https://api.openai.com/v1/chat/completions" value="https://api.openai.com/v1/chat/completions">
+        <p class="hint">远程接口必须使用 HTTPS；本机接口可使用 localhost 或 127.0.0.1</p>
+      </div>
+      <div class="form-group">
+        <label>API Key</label>
+        <input type="password" id="api-key" placeholder="sk-...">
+        <p class="hint">默认仅保存到本次浏览器会话。扩展不会把密钥发往所选 API 以外的地址。</p>
+      </div>
+      <div class="form-group">
+        <label>密钥保存方式</label>
+        <select id="secret-storage">
+          <option value="session">仅本次浏览器会话（推荐）</option>
+          <option value="none">不保存，关闭弹窗后清除</option>
+          <option value="local">保存在本机浏览器（明文，谨慎使用）</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>模型名称</label>
+        <input type="text" id="model-name" value="gpt-4o-mini">
+      </div>
+      <div class="form-group provider-openai">
+        <label>认证方式</label>
+        <select id="auth-type">
+          <option value="bearer">Authorization: Bearer</option>
+          <option value="x-api-key">x-api-key</option>
+          <option value="none">无需密钥（本地模型）</option>
+        </select>
+      </div>
+      <div class="form-group provider-anthropic">
+        <label>Claude 自适应思考</label>
+        <div class="row">
+          <label class="switch"><input type="checkbox" id="adaptive-thinking" checked><span class="slider"></span></label>
+          <span class="switch-label">开启</span>
+        </div>
+      </div>
+      <div class="form-group provider-anthropic">
+        <label>Claude 拒绝回退</label>
+        <div class="row">
+          <label class="switch"><input type="checkbox" id="enable-fallbacks" checked><span class="slider"></span></label>
+          <span class="switch-label">Opus 5 / Fable 5 自动使用服务端回退</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>最大输出 Token</label>
+        <input type="number" id="max-tokens" value="8000" min="256" max="16000" step="256">
+      </div>
+      <div class="form-group">
+        <label>请求超时（秒）</label>
+        <input type="number" id="timeout-seconds" value="120" min="10" max="600">
+      </div>
+      <div class="form-group provider-openai">
+        <label>自定义请求头（高级，可选 JSON）</label>
+        <textarea id="custom-headers" rows="3" placeholder='{"X-Project":"finance"}'></textarea>
+      </div>
+      <div class="form-group">
+        <label>秀米编辑区选择器（高级）</label>
+        <input type="text" id="editor-selector" placeholder="自动检测，一般无需填写">
+        <p class="hint">如自动填充失败，可在秀米页面按F12找到编辑区元素，填写其CSS选择器</p>
+      </div>
+      <div class="form-group">
+        <label>调试模式</label>
+        <div class="row">
+          <label class="switch">
+            <input type="checkbox" id="debug-mode">
+            <span class="slider"></span>
+          </label>
+          <span class="switch-label">开启（控制台输出详细日志）</span>
+        </div>
+      </div>
+      <div class="action-bar">
+        <button id="btn-test-api" class="btn btn-secondary">🔌 测试接口</button>
+        <button id="btn-save" class="btn btn-primary">💾 保存设置</button>
+        <button id="btn-reset" class="btn btn-secondary">🔄 恢复默认</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

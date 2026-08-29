@@ -1,0 +1,26 @@
+/* 秀米金融资讯助手 - 注入样式 */
+
+#xiumi-helper-panel {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+}
+
+.xiumi-helper-btn {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #1a5490 0%, #2980b9 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(26, 84, 144, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.xiumi-helper-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(26, 84, 144, 0.5);
+}
+
+.xiumi-helper-btn:active {
+  transform: scale(0.95);
+}
