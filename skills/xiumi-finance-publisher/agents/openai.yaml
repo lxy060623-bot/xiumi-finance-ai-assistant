@@ -1,0 +1,8 @@
+interface:
+  display_name: "秀米金融资讯发布"
+  short_description: "核验金融资讯与图片出处，并复制秀米模板完成四主题草稿排版"
+  brand_color: "#9A1B2F"
+  default_prompt: "使用 $xiumi-finance-publisher 搜集指定时间段的金融资讯，按四个主题复制秀米模板排版并保存为新草稿。"
+
+policy:
+  allow_implicit_invocation: true

@@ -10,6 +10,33 @@
 
 > Claude.ai/Claude 订阅不等同于 Claude API。使用 Claude 原生接口需要 Anthropic API Key，或自行配置的兼容网关。
 
+## Agent Skill：秀米金融资讯发布
+
+仓库同时提供独立的 `xiumi-finance-publisher` Skill。它把金融资讯工作流从浏览器扩展中拆出，可供支持 `SKILL.md` 的智能体按需使用：
+
+- 核验指定时间段的金融资讯、数字、日期与原始链接；
+- 按参考期刊保持四个模块的编辑角色和排版层级；
+- 为每个模块选择图片并记录作者、来源页和许可依据；
+- 复制秀米模板后编辑，禁止覆盖原稿；
+- 保存后重新打开核验，默认只存草稿、不发布；
+- 使用内置脚本检查四模块、文章来源、图片出处和免责声明。
+
+Skill 源码位于 [`skills/xiumi-finance-publisher`](skills/xiumi-finance-publisher)。它不保存 API Key，也不依赖本扩展；扩展仅作为无法直接控制秀米页面时的可选执行层。
+
+### 安装 Skill
+
+- **Codex**：将整个 `xiumi-finance-publisher` 文件夹复制到个人 Skills 目录，或通过 Codex 的 GitHub Skill 安装方式安装本仓库路径。
+- **Claude Code**：个人安装到 `~/.claude/skills/xiumi-finance-publisher/`，项目安装到 `.claude/skills/xiumi-finance-publisher/`。
+- **claude.ai**：在 Settings > Features 中上传 Skill 专用 ZIP。不同 Claude 使用界面的 Skill 不会自动同步，需要分别安装。
+
+Claude 的目录与上传方式参见 [Anthropic Agent Skills 官方文档](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)。
+
+调用示例：
+
+```text
+使用 $xiumi-finance-publisher，参考我打开的八月上旬模板，搜集八月下旬金融资讯，保留四个模块并复制成新秀米草稿；每条资讯和每张图片都要可追溯出处，不要覆盖原稿，也不要发布。
+```
+
 ## 安装
 
 ### Chrome
@@ -92,4 +119,15 @@ xiumi-finance-helper-universal/
 ├── content.js
 ├── content.css
 └── icons/
+```
+
+Skill 目录：
+
+```text
+skills/xiumi-finance-publisher/
+├── SKILL.md
+├── agents/openai.yaml
+├── references/editorial-standard.md
+├── references/xiumi-workflow.md
+└── scripts/validate_finance_draft.py
 ```

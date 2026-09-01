@@ -1,3 +1,15 @@
+# Skill v1.0.0
+
+新增可独立安装的 `xiumi-finance-publisher` Agent Skill：
+
+- 同一份 `SKILL.md` 可用于 Codex、Claude Code 及支持 Agent Skills 的环境。
+- 内置四主题金融资讯选题、事实核验、文章引用和图片授权规范。
+- 直接操作秀米时强制复制模板，保存后重载核验，默认不发布。
+- 附带零第三方依赖的稿件检查脚本。
+- Skill 不存储 API Key，浏览器扩展降为可选的秀米页面执行层。
+
+Skill 安装包：`dist/xiumi-finance-publisher-skill-v1.0.0.zip`
+
 # v2.0.0
 
 首个跨浏览器、多模型正式版本。
